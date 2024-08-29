@@ -1,0 +1,6 @@
+@EmployeeManagementNextrek_HostAddress = http://localhost:5185
+
+GET {{EmployeeManagementNextrek_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
