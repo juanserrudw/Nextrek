@@ -65,7 +65,7 @@ namespace EmployeeManagementNextrek.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentID")
+                    b.Property<int?>("DepartmentID")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -86,9 +86,6 @@ namespace EmployeeManagementNextrek.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ManagerID")
-                        .HasColumnType("int");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -105,8 +102,6 @@ namespace EmployeeManagementNextrek.Migrations
                     b.HasKey("EmployeeID");
 
                     b.HasIndex("DepartmentID");
-
-                    b.HasIndex("ManagerID");
 
                     b.ToTable("Employees");
                 });
@@ -308,26 +303,15 @@ namespace EmployeeManagementNextrek.Migrations
 
             modelBuilder.Entity("EmployeeManagementNextrek.Models.Employee", b =>
                 {
-                    b.HasOne("EmployeeManagementNextrek.Models.Department", "Department")
+                    b.HasOne("EmployeeManagementNextrek.Models.Department", null)
                         .WithMany("Employees")
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EmployeeManagementNextrek.Models.Employee", "Manager")
-                        .WithMany("Subordinates")
-                        .HasForeignKey("ManagerID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Manager");
+                        .HasForeignKey("DepartmentID");
                 });
 
             modelBuilder.Entity("EmployeeManagementNextrek.Models.EmployeeAddress", b =>
                 {
                     b.HasOne("EmployeeManagementNextrek.Models.Employee", "Employee")
-                        .WithMany("Addresses")
+                        .WithMany()
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -338,7 +322,7 @@ namespace EmployeeManagementNextrek.Migrations
             modelBuilder.Entity("EmployeeManagementNextrek.Models.EmployeeDocument", b =>
                 {
                     b.HasOne("EmployeeManagementNextrek.Models.Employee", "Employee")
-                        .WithMany("Documents")
+                        .WithMany()
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -349,7 +333,7 @@ namespace EmployeeManagementNextrek.Migrations
             modelBuilder.Entity("EmployeeManagementNextrek.Models.EmployeeRole", b =>
                 {
                     b.HasOne("EmployeeManagementNextrek.Models.Employee", "Employee")
-                        .WithMany("EmployeeRoles")
+                        .WithMany()
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -387,17 +371,6 @@ namespace EmployeeManagementNextrek.Migrations
             modelBuilder.Entity("EmployeeManagementNextrek.Models.Department", b =>
                 {
                     b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("EmployeeManagementNextrek.Models.Employee", b =>
-                {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("Documents");
-
-                    b.Navigation("EmployeeRoles");
-
-                    b.Navigation("Subordinates");
                 });
 
             modelBuilder.Entity("EmployeeManagementNextrek.Models.Permission", b =>

@@ -21,22 +21,23 @@ namespace EmployeeManagementNextrek.Models
         public DateTime HireDate { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        // Foreign Key for Department
-        public int DepartmentID { get; set; }
-        public Department Department { get; set; }
+        //// Foreign Key for Department
+        //public int DepartmentID { get; set; }
+        //public Department Department { get; set; }
 
-        // Self-referencing Foreign Key for Manager
-        public int? ManagerID { get; set; }
-        public Employee Manager { get; set; }
-        public ICollection<Employee> Subordinates { get; set; }
+        //// Self-referencing Foreign Key for Manager
+        //public int? ManagerID { get; set; }
+        //public Employee Manager { get; set; }
+        //public ICollection<Employee> Subordinates { get; set; }
 
         [MaxLength(50)]
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public ICollection<EmployeeRole> EmployeeRoles { get; set; }
-        public ICollection<EmployeeAddress> Addresses { get; set; }
-        public ICollection<EmployeeDocument> Documents { get; set; }
+    //    public ICollection<EmployeeRole> EmployeeRoles { get; set; }
+    //    public ICollection<EmployeeAddress> Addresses { get; set; }
+    //    public ICollection<EmployeeDocument> Documents { get; set; }
+    //
     }
 }

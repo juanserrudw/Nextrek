@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmployeeManagementNextrek")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c8a497b4db7a1571229a665e9d8afe4f68eb480")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmployeeManagementNextrek")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmployeeManagementNextrek")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

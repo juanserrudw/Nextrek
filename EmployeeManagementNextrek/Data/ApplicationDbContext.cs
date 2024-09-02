@@ -23,17 +23,17 @@ namespace EmployeeManagementNextrek.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Employee - Manager (Self-referencing)
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Manager)
-                .WithMany(e => e.Subordinates)
-                .HasForeignKey(e => e.ManagerID)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Employee>()
+            //    .HasOne(e => e.Manager)
+            //    .WithMany(e => e.Subordinates)
+            //    .HasForeignKey(e => e.ManagerID)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             // Employee - Department
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Department)
-                .WithMany(d => d.Employees)
-                .HasForeignKey(e => e.DepartmentID);
+            //modelBuilder.Entity<Employee>()
+            //    .HasOne(e => e.Department)
+            //    .WithMany(d => d.Employees)
+            //    .HasForeignKey(e => e.DepartmentID);
 
             // Department - Manager (Self-referencing)
             modelBuilder.Entity<Department>()
@@ -46,10 +46,10 @@ namespace EmployeeManagementNextrek.Data
             modelBuilder.Entity<EmployeeRole>()
                 .HasKey(er => new { er.EmployeeID, er.RoleID });
 
-            modelBuilder.Entity<EmployeeRole>()
-                .HasOne(er => er.Employee)
-                .WithMany(e => e.EmployeeRoles)
-                .HasForeignKey(er => er.EmployeeID);
+            //modelBuilder.Entity<EmployeeRole>()
+            //    .HasOne(er => er.Employee)
+            //    .WithMany(e => e.EmployeeRoles)
+            //    .HasForeignKey(er => er.EmployeeID);
 
             modelBuilder.Entity<EmployeeRole>()
                 .HasOne(er => er.Role)
@@ -71,16 +71,16 @@ namespace EmployeeManagementNextrek.Data
                 .HasForeignKey(rp => rp.PermissionID);
 
             // Employee - Addresses (One-to-Many)
-            modelBuilder.Entity<EmployeeAddress>()
-                .HasOne(ea => ea.Employee)
-                .WithMany(e => e.Addresses)
-                .HasForeignKey(ea => ea.EmployeeID);
+            //modelBuilder.Entity<EmployeeAddress>()
+            //    .HasOne(ea => ea.Employee)
+            //    .WithMany(e => e.Addresses)
+            //    .HasForeignKey(ea => ea.EmployeeID);
 
-            // Employee - Documents (One-to-Many)
-            modelBuilder.Entity<EmployeeDocument>()
-                .HasOne(ed => ed.Employee)
-                .WithMany(e => e.Documents)
-                .HasForeignKey(ed => ed.EmployeeID);
+            //// Employee - Documents (One-to-Many)
+            //modelBuilder.Entity<EmployeeDocument>()
+            //    .HasOne(ed => ed.Employee)
+            //    .WithMany(e => e.Documents)
+            //    .HasForeignKey(ed => ed.EmployeeID);
 
             base.OnModelCreating(modelBuilder);
         }
