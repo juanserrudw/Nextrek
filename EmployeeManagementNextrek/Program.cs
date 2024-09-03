@@ -30,6 +30,8 @@ builder.Services.AddScoped<IEmployeeDocumentRepository, EmployeeDocumentReposito
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository >();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository >();
+builder.Services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
+builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository >();
 
 
 var app = builder.Build();

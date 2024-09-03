@@ -5,6 +5,8 @@ using EmployeeManagementNextrek.Repositories.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using EmployeeManagementNextrek.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace EmployeeManagementNextrek.Controllers
 {
@@ -14,14 +16,18 @@ namespace EmployeeManagementNextrek.Controllers
     {
         private readonly ILogger<RolesController> _logger;
         private readonly IRoleRepository _rollRepository;
+        private readonly IEmployeeRoleRepository _employeeRoleRepository;
+        private readonly IRolePermissionRepository _roleRepository;
         private readonly IMapper _mapper;
         protected APIResponse _response;
 
 
-        public RolesController(ILogger<RolesController> logger, IRoleRepository rollRepository, IMapper mapper)
+        public RolesController(ILogger<RolesController> logger, IRoleRepository rollRepository, IRolePermissionRepository roleRepository, IEmployeeRoleRepository employeeRoleRepository, IMapper mapper)
         {
             _logger = logger;
             _rollRepository = rollRepository;
+            _employeeRoleRepository = employeeRoleRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
             _response = new();
         }
@@ -190,7 +196,159 @@ namespace EmployeeManagementNextrek.Controllers
             return BadRequest(_response);
         }
 
-        
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updateRole(int id, JsonPatchDocument<RoleUpDateDto> patchDto)
+        {
+            try
+            {
+                if (patchDto == null || id == 0)
+                {
+                    return BadRequest();
+                }
+
+
+                var roll = await _rollRepository.GetById(v => v.RoleID == id, Tracked: false);
+
+                RoleUpDateDto rollDto = _mapper.Map<RoleUpDateDto>(roll);
+
+                if (roll == null) return BadRequest();
+
+                patchDto.ApplyTo(rollDto, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(ModelState);
+                }
+                Role modelo = _mapper.Map<Role>(rollDto);
+
+                await _rollRepository.UpDate(modelo);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+            }
+            return BadRequest(_response);
+        }
+
+
+        //Asignar roles a empleados
+
+
+        // POST: api/roles/{roleId}/employees
+        [HttpPost("{roleId:int}/employees")]
+        public async Task<IActionResult> AssignRoleToEmployee(int roleId, [FromBody] EmployeeRoleCreateDto employeeRoleCreateDto)
+        {
+            try { 
+            var role = await _employeeRoleRepository.GetById(r => r.RoleID == roleId);
+            if (role == null)
+            {
+                _response.IsSuccessful = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                return NotFound(_response);
+            }
+
+            var employeeRole = _mapper.Map<EmployeeRole>(employeeRoleCreateDto);
+            employeeRole.RoleID = roleId;
+            await _employeeRoleRepository.Create(employeeRole);
+
+            _response.StatusCode = HttpStatusCode.Created;
+            return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
+        // DELETE: api/roles/{roleId}/employees/{employeeId}
+        [HttpDelete("{roleId:int}/employees/{employeeId:int}")]
+        public async Task<IActionResult> DeleteRoleFromEmployee(int roleId, int employeeId)
+        {
+            try
+            {
+
+                var employeeRole = await _employeeRoleRepository.GetByIds(roleId, employeeId);
+                if (employeeRole == null)
+                {
+                    _response.IsSuccessful = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound();
+                }
+
+                await _employeeRoleRepository.Delete(employeeRole);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
+         
+
+
+
+
+        // POST: api/roles/{roleId}/permissions
+        [HttpPost("{roleId:int}/permissions")]
+        public async Task<IActionResult> AssignPermissionToRole(int roleId, [FromBody] RolePermissionCreateDto rolePermissionCreateDto)
+        {
+            try
+            {
+                var role = await _roleRepository.GetById(r => r.RoleID == roleId);
+                if (role == null)
+                {
+                    _response.IsSuccessful = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                var rolePermission = _mapper.Map<RolePermission>(rolePermissionCreateDto);
+                rolePermission.RoleID = roleId;
+                await _roleRepository.Create(rolePermission);
+
+                _response.StatusCode = HttpStatusCode.Created;
+                return Ok(_response);
+            }
+            catch (Exception ex) {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+
+        }
+
+        // DELETE: api/roles/{roleId}/permissions/{permissionId}
+        [HttpDelete("{roleId:int}/permissions/{permissionId:int}")]
+        public async Task<IActionResult> RevokePermissionFromRole(int roleId, int permissionId)
+        {
+            var rolePermission = await _roleRepository.GetByIds(roleId, permissionId);
+            if (rolePermission == null)
+            {
+                _response.IsSuccessful = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                return NotFound(_response);
+            }
+
+            await _roleRepository.Delete(rolePermission);
+            _response.StatusCode = HttpStatusCode.NoContent;
+            return NoContent();
+        }
+
 
     }
 }

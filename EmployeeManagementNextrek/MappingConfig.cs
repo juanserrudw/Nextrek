@@ -26,6 +26,8 @@ namespace EmployeeManagementNextrek
             CreateMap<EmployeeDocument, EmployeeDocumentDto>().ReverseMap();
             CreateMap<EmployeeDocument, EmployeeDocumentCreateDto>().ReverseMap();
             CreateMap<EmployeeDocumentDto, EmployeeDocumentUpdateDto>().ReverseMap();
+            CreateMap<EmployeeRole, EmployeeRoleCreateDto>().ReverseMap();
+            CreateMap<RolePermission, RolePermissionCreateDto>().ReverseMap();
 
         }
     }

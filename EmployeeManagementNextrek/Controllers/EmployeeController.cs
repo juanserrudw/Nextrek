@@ -370,10 +370,53 @@ namespace EmployeeManagementNextrek.Controllers
             }
         }
 
-        
+        [HttpPatch("{id:int}/addresses/{addressId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updateEmployeeAddress(int id, JsonPatchDocument<EmployeeAddressUpDateDto> patchDto)
+        {
+            try
+            {
+                if (patchDto == null || id == 0)
+                {
+                    return BadRequest();
+                }
 
 
-             // Manage employee documents
+                var address = await _addressRepository.GetById(v => v.AddressID == id, Tracked: false);
+
+                EmployeeAddressUpDateDto addressDto = _mapper.Map<EmployeeAddressUpDateDto>(address);
+
+                if (address == null) return BadRequest();
+
+                patchDto.ApplyTo(addressDto, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(ModelState);
+                }
+                 EmployeeAddress modelo = _mapper.Map<EmployeeAddress>(addressDto);
+
+                await _addressRepository.UpDate(modelo);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+            }
+            return BadRequest(_response);
+        }
+
+
+
+
+        // Manage employee documents
 
 
 
@@ -472,6 +515,49 @@ namespace EmployeeManagementNextrek.Controllers
                 _response.ErrorMessage = new List<string> { ex.Message };
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
+        }
+
+        [HttpPatch("{id:int}/documents/{documentId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updateDocumentAddress(int id, JsonPatchDocument<EmployeeDocumentUpdateDto> patchDto)
+        {
+            try
+            {
+                if (patchDto == null || id == 0)
+                {
+                    return BadRequest();
+                }
+
+
+                var document = await _documentRepository.GetById(v => v.DocumentID == id, Tracked: false);
+
+                EmployeeDocumentUpdateDto documentDto = _mapper.Map<EmployeeDocumentUpdateDto>(document);
+
+                if (document == null) return BadRequest();
+
+                patchDto.ApplyTo(documentDto, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(ModelState);
+                }
+                EmployeeDocument modelo = _mapper.Map<EmployeeDocument>(documentDto);
+
+                await _documentRepository.UpDate(modelo);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+            }
+            return BadRequest(_response);
         }
     }
 }

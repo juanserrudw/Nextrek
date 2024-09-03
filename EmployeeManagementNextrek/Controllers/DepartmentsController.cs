@@ -5,6 +5,8 @@ using EmployeeManagementNextrek.Repositories.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Microsoft.AspNetCore.JsonPatch;
+using System.Reflection.Metadata;
 
 namespace EmployeeManagementNextrek.Controllers
 {
@@ -187,6 +189,49 @@ namespace EmployeeManagementNextrek.Controllers
                 _response.IsSuccessful = false;
                 _response.ErrorMessage = new List<string>() { ex.ToString() };
 
+            }
+            return BadRequest(_response);
+        }
+
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updateDepartment(int id, JsonPatchDocument<DepartmentUpDateDto> patchDto)
+        {
+            try
+            {
+                if (patchDto == null || id == 0)
+                {
+                    return BadRequest();
+                }
+
+
+                var department = await _departmentRepository.GetById(v => v.DepartmentID == id, Tracked: false);
+
+                DepartmentUpDateDto departmentDto = _mapper.Map<DepartmentUpDateDto>(department);
+
+                if (department == null) return BadRequest();
+
+                patchDto.ApplyTo(departmentDto, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(ModelState);
+                }
+                Department modelo = _mapper.Map<Department>(departmentDto);
+
+                await _departmentRepository.UpDate(modelo);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
             }
             return BadRequest(_response);
         }

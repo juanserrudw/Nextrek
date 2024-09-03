@@ -5,6 +5,8 @@ using EmployeeManagementNextrek.Repositories.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using EmployeeManagementNextrek.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace EmployeeManagementNextrek.Controllers
 {
@@ -190,5 +192,49 @@ namespace EmployeeManagementNextrek.Controllers
             }
             return BadRequest(_response);
         }
+
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updatePermission(int id, JsonPatchDocument<PermissionUpDateDto> patchDto)
+        {
+            try
+            {
+                if (patchDto == null || id == 0)
+                {
+                    return BadRequest();
+                }
+
+
+                var permission = await _permissionRepository.GetById(v => v.PermissionID == id, Tracked: false);
+
+                PermissionUpDateDto permissionDto = _mapper.Map<PermissionUpDateDto>(permission);
+
+                if (permission == null) return BadRequest();
+
+                patchDto.ApplyTo(permissionDto, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+
+                    return BadRequest(ModelState);
+                }
+                Permission modelo = _mapper.Map<Permission>(permissionDto);
+
+                await _permissionRepository.UpDate(modelo);
+                _response.StatusCode = HttpStatusCode.NoContent;
+
+
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+            }
+            return BadRequest(_response);
+        }
+
     }
 }
