@@ -4,6 +4,7 @@ namespace EmployeeManagementNextrek.Models.Dtos
 {
     public class EmployeCreateDto
     {
+        public int DepartmentID { get; set; }
         public required string FirstName { get; set; }
         [MaxLength(100)]
         public required string LastName { get; set; }

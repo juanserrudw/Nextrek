@@ -15,7 +15,7 @@ namespace EmployeeManagementNextrek
             CreateMap<Department, DepartmentCreateDto>().ReverseMap();
             CreateMap<Department, EmployeeUpdateDto>().ReverseMap();
             CreateMap<Role, RoleDto>().ReverseMap();
-            CreateMap<Role,RoleCreateDto>().ReverseMap();
+            CreateMap<Role, RoleCreateDto>().ReverseMap();
             CreateMap<Role, RoleUpDateDto>().ReverseMap();
             CreateMap<Permission, PermissionDto>().ReverseMap();
             CreateMap<Permission, PermissionCreateDto>().ReverseMap();
@@ -28,6 +28,15 @@ namespace EmployeeManagementNextrek
             CreateMap<EmployeeDocumentDto, EmployeeDocumentUpdateDto>().ReverseMap();
             CreateMap<EmployeeRole, EmployeeRoleCreateDto>().ReverseMap();
             CreateMap<RolePermission, RolePermissionCreateDto>().ReverseMap();
+            CreateMap<WorkSchedule, WorkScheduleDto>().ReverseMap();
+            CreateMap<WorkSchedule, WorkScheduleCreateDto>().ReverseMap();
+            CreateMap<WorkSchedule, WorkScheduleUpdateDto>().ReverseMap();
+            CreateMap<WorkShift, WorkShiftCreateDto>().ReverseMap();    
+            CreateMap<WorkShift, WorkShiftDto>().ReverseMap();
+            CreateMap<WorkShift, WorkShiftUpdateDto>().ReverseMap();
+            CreateMap<ScheduleException, ScheduleExceptionCreateDto>().ReverseMap();
+            CreateMap<ScheduleException, ScheduleExceptionDto>().ReverseMap();
+            CreateMap<ScheduleException, ScheduleExceptionUpdateDto>().ReverseMap();
 
         }
     }

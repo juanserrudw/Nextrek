@@ -4,6 +4,7 @@ using EmployeeManagementNextrek.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagementNextrek.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240903195556_CreateTablesWorkSchedule")]
+    partial class CreateTablesWorkSchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,10 +41,15 @@ namespace EmployeeManagementNextrek.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("ManagerID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("DepartmentID");
+
+                    b.HasIndex("ManagerID");
 
                     b.ToTable("Departments");
                 });
@@ -400,6 +408,16 @@ namespace EmployeeManagementNextrek.Migrations
                     b.HasKey("ShiftId");
 
                     b.ToTable("WorkShifts");
+                });
+
+            modelBuilder.Entity("EmployeeManagementNextrek.Models.Department", b =>
+                {
+                    b.HasOne("EmployeeManagementNextrek.Models.Employee", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("EmployeeManagementNextrek.Models.Employee", b =>

@@ -1,7 +1,11 @@
-﻿namespace EmployeeManagementNextrek.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EmployeeManagementNextrek.Models
 {
     public class EmployeeRole
     {
+        [Key]
+        public int EmployeRoleId { get; set; }
         public int EmployeeID { get; set; }
         public Employee Employee { get; set; }
 

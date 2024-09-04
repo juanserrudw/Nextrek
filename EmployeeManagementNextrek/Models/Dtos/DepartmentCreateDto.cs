@@ -12,7 +12,7 @@ namespace EmployeeManagementNextrek.Models.Dtos
         public DateTime UpdatedAt { get; set; }
 
         // Self-referencing Foreign Key for Manager
-        public int? ManagerID { get; set; }
-        public Employee Manager { get; set; }
+        //public int? ManagerID { get; set; }
+        //public Employee Manager { get; set; }
     }
 }

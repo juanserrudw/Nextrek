@@ -32,6 +32,9 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository >();
 builder.Services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
 builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository >();
+builder.Services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository >();
+builder.Services.AddScoped<IWorkShiftRepository, WorkShiftRepository >();
+builder.Services.AddScoped<IScheduleExceptionRepository, ScheduleExceptionRepository >();
 
 
 var app = builder.Build();

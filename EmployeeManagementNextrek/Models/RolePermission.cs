@@ -2,6 +2,7 @@
 {
     public class RolePermission
     {
+        public int RolePermissionId { get; set; }
         public int RoleID { get; set; }
         public Role Role { get; set; }
 
